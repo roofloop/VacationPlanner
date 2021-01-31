@@ -5,10 +5,11 @@ import { StyleSheet, Text, View, Button, TextInput } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { AuthContext } from '../context/AuthContext';
 
-export default function LogIn() {
+export default function LogIn({ navigation }) {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    
     const { logIn } = useContext(AuthContext);
 
     const submit = () => {

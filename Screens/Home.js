@@ -1,75 +1,40 @@
-import React, { useContext } from 'react';
-import { Button, View, StyleSheet, Text } from 'react-native';
-import { AuthContext } from '../context/AuthContext';
-import { StatusBar } from 'expo-status-bar';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { NavigationContainer } from '@react-navigation/native';
+import React from 'react';
+import { View, StyleSheet, Text } from 'react-native';
+import FloatingButton from '../Styles/FloatingButton';
 
 
 
+export default function Home({ navigation }) {
 
-export default function Home() {
-
-  const { signOut } = useContext(AuthContext);
-
-
-  const submit = () => {
-    signOut();
-
-  };
-
-
-  function HomeScreen() {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>Home!</Text>
-      </View>
-    );
-  }
-  
-  function SettingsScreen() {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>Settings!</Text>
-      </View>
-    );
-  }
-
-  const Tab = createBottomTabNavigator();
-
+  const NewVacationScreen = () => {
+    console.log("Creating User")
+    navigation.navigate("NewVacationScreen")
+}
 
   return (
 
-
     <View style={styles.container}>
-      <StatusBar style="auto" />
-      <Button style={styles.button} title="Sign Out" onPress={submit} />
+      <Text>
+        I'm just a Text
+        </Text>
 
-
-      <Tab.Navigator>
-        <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="Settings" component={SettingsScreen} />
-      </Tab.Navigator>
-
+      <FloatingButton
+        style={styles.floatinBtn}
+        onPress={NewVacationScreen}
+         />
     </View>
-
-    
-
-
   );
 }
-
-
-
-
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center'
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  button: {
-    flex: 1,
-    marginTop: 100,
-  }
+  floatinBtn: {
+    position: 'absolute',
+    bottom: 10,
+    right: 10,
+  },
 });

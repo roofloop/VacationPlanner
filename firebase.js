@@ -1,5 +1,6 @@
 import firebase from "firebase";
 
+
 const firebaseConfig = {
   apiKey: "AIzaSyA85uPJzMPE56eNciydAJZZlJmZrJDEEsk",
   authDomain: "reactnativejs-826d7.firebaseapp.com",
@@ -13,3 +14,4 @@ const firebaseConfig = {
 const firebaseApp = firebase.initializeApp(firebaseConfig);
 
 export const auth = firebase.auth();
+

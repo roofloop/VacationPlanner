@@ -5,9 +5,6 @@ import UnauthenticatedStack from './UnauthenticatedStack';
 import { AuthContext } from '../context/AuthContext';
 import Splash from '../Screens/Splash';
 
-
-
-
 export default function AuthNavigation() {
 
   const { user, isLoading } = useContext(AuthContext);
