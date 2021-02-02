@@ -8,5 +8,5 @@
 <img src="create.gif" alt="screenshot" width="350"/>
 
 ### App Demo - Update vacation-plan
-<img src="Update.gif" alt="screenshot" width="350"/>
+<img src="update.gif" alt="screenshot" width="350"/>
 
