@@ -10,3 +10,6 @@
 ### App Demo - Update vacation-plan
 <img src="update.gif" alt="screenshot" width="350"/>
 
+### App Demo - Delete vacation
+<img src="delete.gif" alt="screenshot" width="350"/>
+
