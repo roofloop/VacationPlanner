@@ -1,12 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
-import { useState } from 'react/cjs/react.development';
 import { AuthContext } from '../context/AuthContext';
 
 export default function CreateUser() {
-    const [userName, setUserName] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
 
@@ -17,46 +15,47 @@ export default function CreateUser() {
     }
 
     return (
-        <View style={styles.container}>
-        <Text style={{ fontSize: 36, fontWeight: 'bold' }}>Create User</Text>
-        <View style={styles.inputView}>
-            <TextInput 
-                style={styles.textInput}
-                placeholder="Enter Username"
-                value={userName}
-                onChangeText={setUserName} />
-        </View>
-        <View style={styles.inputView}>
-            <TextInput 
-                style={styles.textInput}
-                placeholder="Enter Email"
-                keyboardType="email-address"
-                value={email}
-                onChangeText={setEmail} />
-        </View>
-        <View style={styles.inputView}>
-            <TextInput 
-                style={styles.textInput}
-                placeholder="Enter Password"
-                secureTextEntry={true}
-                value={password}
-                onChangeText={setPassword} />
-        </View>
-        <View style={styles.inputView}>
-            <TouchableOpacity
-                style={button.customButton}
-                onPress={submitSignUp}>
-                    <Text style={{ fontSize: 18 }}>Submit</Text>
-            </TouchableOpacity>
-        </View>
 
-        <StatusBar style="auto" />
+        <View style={styles.container}>
+
+            <Text style={styles.headText}>Create a new user</Text>
+
+            
+
+            <View style={styles.inputView}>
+                <TextInput
+                    style={styles.textInput}
+                    placeholder="Enter Email"
+                    keyboardType="email-address"
+                    placeholderTextColor="#FFFFFF" 
+
+                    value={email}
+                    onChangeText={setEmail} />
+            </View>
+            <View style={styles.inputView}>
+                <TextInput
+                    style={styles.textInput}
+                    placeholder="Enter Password"
+                    placeholderTextColor="#FFFFFF" 
+
+                    secureTextEntry={true}
+                    value={password}
+                    onChangeText={setPassword} />
+            </View>
+            <View style={styles.inputView}>
+                <TouchableOpacity
+                    style={button.customButton}
+                    onPress={submitSignUp}>
+                    <Text style={{ fontSize: 18, color:"#FFFFFF" }}>Submit</Text>
+                </TouchableOpacity>
+            </View>
+
+
+
+            <StatusBar style="auto" />
 
         </View>
     );
-
-
-    
 }
 
 const styles = StyleSheet.create({
@@ -64,25 +63,33 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
         alignItems: 'center',
-        //justifyContent: 'center',
+        justifyContent: 'center'
     },
     inputView: {
         padding: 10,
     },
     textInput: {
-        backgroundColor: '#f1f1f1',
+        backgroundColor:"#465881",
+
         borderRadius: 10,
         padding: 10,
         width: 200
+    },
+    headText: {
+        fontSize: 36,
+        fontWeight: 'bold',
+        margin: 20,
+        top: 0
     },
 });
 
 const button = StyleSheet.create({
     customButton: {
-        backgroundColor: '#ffb957',
+        backgroundColor: '#46816f',
         alignItems: 'center',
         padding: 10,
         borderRadius: 10,
-        width: 160
+        width: 160,
+        margin: 50,
     }
 })

@@ -1,15 +1,17 @@
 import React, { createContext, useState, useEffect } from "react";
 import { auth } from "../firebase";
 
+
+
 export const AuthContext = createContext();
 
 export default function AuthContextProvider({ children }) {
+
   const [user, setUser] = useState();
   const [isLoading, setIsloading] = useState(true);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
-      console.log('user: ', user);
       setUser(user);
       setIsloading(false);
     });
@@ -22,8 +24,8 @@ export default function AuthContextProvider({ children }) {
     console.log("calling log in");
     try {
       await auth.signInWithEmailAndPassword(email, password);
-      console.log("logIn");
     } catch (error) {
+      alert(error)
       console.log('error', error);
     }
   };
@@ -39,8 +41,9 @@ export default function AuthContextProvider({ children }) {
 
   const signUp = async (email, password) => {
     try {
+
       await auth.createUserWithEmailAndPassword(email, password)
-      console.log("Creating User")
+
     } catch (error) {
       console.log("error: ", error)
     }

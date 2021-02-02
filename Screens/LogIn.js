@@ -1,7 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { useState, useContext } from 'react';
-import { StyleSheet, Text, View, Button, TextInput } from 'react-native';
+import { StyleSheet, Text, View, TextInput } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { AuthContext } from '../context/AuthContext';
 
@@ -25,7 +25,6 @@ export default function LogIn({ navigation }) {
 
   return (
     <View style={styles.container}>
-        <Text style={styles.inputext}> Sign In  </Text>
         
         <TextInput placeholder = "Enter Email" 
         value= {email} onChangeText = {setEmail} 
@@ -54,8 +53,6 @@ export default function LogIn({ navigation }) {
                     <Text style={{ fontSize: 18, color:"#FFFFFF" }}>Create User</Text>
             </TouchableOpacity>
         </View>
-
-        <Button title="Submit" onPress={submit} />
 
         <StatusBar style="auto" />
 
@@ -99,11 +96,12 @@ const styles = StyleSheet.create({
     borderColor: 'black',
     marginBottom: 10,
   },
+
 });
 
 const button = StyleSheet.create({
   customButton: {
-    backgroundColor: '#ffb957',
+    backgroundColor: '#46816f',
         alignItems: 'center',
         padding: 10,
         borderRadius: 10,

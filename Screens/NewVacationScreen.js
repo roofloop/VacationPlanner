@@ -1,64 +1,84 @@
-import React from 'react';
-import { View, Text, StyleSheet, TextInput } from 'react-native';
-import { StatusBar } from 'expo-status-bar';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import React, { useState, useContext } from 'react';
+import { View, StyleSheet, TextInput, Keyboard } from 'react-native';
+import { FAB } from 'react-native-paper'
+import { FireBaseContext } from '../context/FireBaseContext';
 
 
+export default function NewVacationScreen({ navigation }) {
 
-export default function NewVacationScreen() {
+  const [destinationText, setDestinationText] = useState('')
+  const [vacationTodoText, setVacationTodoText] = useState('')
+
+  const { saveToDb } = useContext(FireBaseContext);
+
+  const writeToFirestore = () => {
+    saveToDb(destinationText, vacationTodoText).then(
+      Keyboard.dismiss(),
+      navigation.navigate("Home"))
+  }
+
   return (
 
     <View style={styles.container}>
-      <Text style={{ fontSize: 36, fontWeight: 'bold' }}>New Vacation</Text>
-      <View style={styles.inputView}>
-        <TextInput
-          style={styles.textInput}
-          placeholder="Enter destination"
-        />
-      </View>
-    
-      <View style={styles.inputView}>
-        <TouchableOpacity
-          style={button.customButton}
-          >
-          <Text style={{ fontSize: 18 }}>Submit</Text>
-        </TouchableOpacity>
-      </View>
 
-      <StatusBar style="auto" />
+      <TextInput
+        placeholder='Add destination here'
+        value={destinationText}
+        mode='outlined'
+        onChangeText={setDestinationText}
+        style={styles.title}
+      />
 
+      <TextInput
+        placeholder='Add what to do on Vacation here'
+        value={vacationTodoText}
+        onChangeText={setVacationTodoText}
+        mode='flat'
+        multiline={true}
+        style={styles.text}
+        scrollEnabled={true}
+        returnKeyType='done'
+        blurOnSubmit={true}
+      />
+
+
+      <FAB
+        style={styles.fab}
+        small
+        icon='check'
+        onPress={writeToFirestore}>
+
+      </FAB>
     </View>
-
   );
-
 }
+
 
 const styles = StyleSheet.create({
   container: {
-      flex: 1,
-      backgroundColor: '#fff',
-      alignItems: 'center',
-      //justifyContent: 'center',
-  },
-  inputView: {
-      padding: 150,
-  },
-  textInput: {
-      backgroundColor: '#f1f1f1',
-      borderRadius: 10,
-      padding: 10,
-      width: 200
-  },
-});
 
-const button = StyleSheet.create({
-  customButton: {
-    backgroundColor: '#ffb957',
-        alignItems: 'center',
-        padding: 10,
-        borderRadius: 10,
-        width: 160,
-        marginBottom:20
-
+    flex: 1,
+    paddingHorizontal: 20,
+    paddingVertical: 20
+  },
+  title: {
+    borderWidth: 2,
+    borderColor: 'lightgrey',
+    backgroundColor: "white",
+    fontSize: 24,
+    marginBottom: 20
+  },
+  text: {
+    borderWidth: 2,
+    borderColor: 'lightgrey',
+    backgroundColor: "white",
+    height: 300,
+    fontSize: 16
+  },
+  fab: {
+    position: 'absolute',
+    margin: 20,
+    right: 0,
+    bottom: 0
   }
 })

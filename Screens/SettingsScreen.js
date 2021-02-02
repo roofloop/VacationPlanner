@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Button, View, StyleSheet, Text } from 'react-native';
+import { Button, View, StyleSheet } from 'react-native';
 import { AuthContext } from '../context/AuthContext';
 import { StatusBar } from 'expo-status-bar';
 
