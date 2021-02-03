@@ -18,15 +18,17 @@ export default function NewVacationScreen({ route, navigation }) {
 
 
     const updateToFirestore = () => {
-        updateToDb(vacationTodoText, paramText, paramKey).then(
-          Keyboard.dismiss(),
-          navigation.navigate("Home"))
-      }
+        if (vacationTodoText && vacationTodoText.length > 0) {
+            updateToDb(vacationTodoText, paramText, paramKey).then(
+                Keyboard.dismiss(),
+                navigation.navigate("Home"))
+        }
+    }
     const deleteFromFirestore = () => {
         deleteFromDb(paramKey).then(
-          Keyboard.dismiss(),
-          navigation.navigate("Home"))
-      }
+            Keyboard.dismiss(),
+            navigation.navigate("Home"))
+    }
 
 
     return (
