@@ -1,61 +1,68 @@
-import { View, StyleSheet, Text, FlatList, TouchableOpacity } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Text,
+  FlatList,
+  TouchableOpacity,
+} from 'react-native';
 import React, { useState, useEffect } from 'react';
-import { auth, dbh } from "../firebase";
-import { FAB } from 'react-native-paper'
+import { auth, dbh } from '../firebase';
+import { FAB } from 'react-native-paper';
 
 export default function Home({ navigation }) {
-
-  const [destination, setDestination] = useState([])
-  const userID = auth.currentUser.uid
+  const [destination, setDestination] = useState([]);
+  const userID = auth.currentUser.uid;
 
   //Get data from firestore.
   useEffect(() => {
     dbh
-      .where("creatorId", "==", userID)
+      .where('creatorId', '==', userID)
       .orderBy('createdAt', 'desc')
       .onSnapshot(
-        querySnapshot => {
-          const newDestination = []
-          querySnapshot.forEach(doc => {
-            const destinations = doc.data()
-            destinations.id = doc.id
-            newDestination.push(destinations)
+        (querySnapshot) => {
+          const newDestination = [];
+          querySnapshot.forEach((doc) => {
+            const destinations = doc.data();
+            destinations.id = doc.id;
+            newDestination.push(destinations);
           });
-          setDestination(newDestination)
+          setDestination(newDestination);
         },
-        error => {
-          console.log(error)
+        (error) => {
+          console.log(error);
         }
-      )
-  }, [])
-  
+      );
+  }, []);
 
   const renderDestinations = ({ item }) => {
     return (
-      <TouchableOpacity onPress={() => navigation.navigate("EditVacationScreen", { paramKey: item.id, paramText: item.destination, paramTodo: item.todo })} style={styles.destinationContainer}>
-
-        <Text style={styles.destinationText}>
-          {item.destination}
-        </Text>
+      <TouchableOpacity
+        onPress={() =>
+          navigation.navigate('EditVacationScreen', {
+            paramKey: item.id,
+            paramText: item.destination,
+            paramTodo: item.todo,
+          })
+        }
+        style={styles.destinationContainer}
+      >
+        <Text style={styles.destinationText}>{item.destination}</Text>
       </TouchableOpacity>
-    )
-  }
+    );
+  };
 
   return (
-
     <View style={styles.container}>
-
       <FAB
         style={styles.fab}
         small
-        icon='plus'
+        icon="plus"
         onPress={() => {
-          navigation.navigate("NewVacationScreen")
+          navigation.navigate('NewVacationScreen');
         }}
-
       />
 
-      { destination && (
+      {destination && (
         <View style={styles.listContainer}>
           <FlatList
             data={destination}
@@ -65,7 +72,6 @@ export default function Home({ navigation }) {
           />
         </View>
       )}
-
     </View>
   );
 }
@@ -85,20 +91,19 @@ const styles = StyleSheet.create({
     marginTop: 16,
     borderBottomColor: '#cccccc',
     borderBottomWidth: 1,
-    paddingBottom: 16
+    paddingBottom: 16,
   },
   destinationText: {
     fontSize: 20,
-    color: '#333333'
+    color: '#333333',
   },
   baseText: {
-    fontFamily: "Cochin"
+    fontFamily: 'Cochin',
   },
   fab: {
     position: 'absolute',
     margin: 20,
     right: 0,
-    bottom: 0
-  }
-
+    bottom: 0,
+  },
 });

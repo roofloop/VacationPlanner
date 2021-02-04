@@ -1,17 +1,11 @@
 import React from 'react';
 import { Text, View, StyleSheet, ActivityIndicator } from 'react-native';
 
-
-
 export default function Splash() {
-
-
-
   return (
     <View style={styles.container}>
-        <Text>Vacation Planner</Text>
-        <ActivityIndicator animating={true} />
-
+      <Text>Vacation Planner</Text>
+      <ActivityIndicator animating={true} />
     </View>
   );
 }
