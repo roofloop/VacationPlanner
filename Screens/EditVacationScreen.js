@@ -1,9 +1,9 @@
-import React, { useState, useContext } from 'react';
-import { View, Text, StyleSheet, TextInput, Keyboard, Alert } from 'react-native';
+import React, { useState, useContext, useEffect } from 'react';
+import { View, Text, StyleSheet, TextInput, Keyboard, Alert, FlatList, TouchableOpacity } from 'react-native';
+import { auth, dbh } from "../firebase";
 
 import { FAB } from 'react-native-paper'
 import { FireBaseContext } from '../context/FireBaseContext';
-
 
 
 export default function NewVacationScreen({ route, navigation }) {
@@ -11,10 +11,52 @@ export default function NewVacationScreen({ route, navigation }) {
     const paramKey = route.params.paramKey
     const paramText = route.params.paramText
     const paramTodo = route.params.paramTodo
+    const destArray = route.params.paramDestinationArray
 
     const [vacationTodoText, setVacationTodoText] = useState(paramTodo)
 
     const { updateToDb, deleteFromDb } = useContext(FireBaseContext);
+    const [list, setList] = useState([]);
+    
+    const [userDetails, setUserDetails] = useState('')
+
+    //Get data from firestore.
+    useEffect(() => {
+        
+        const newDestination = []
+
+        dbh.doc(paramKey).get().then(
+            
+            snapshot => setUserDetails(snapshot.data()))
+
+    });
+
+    const userDet = () => {
+
+        const newDestination = []
+        newDestination.push(userDetails)
+
+        console.log(JSON.stringify(newDestination));
+
+        setList(newDestination)
+
+    }
+
+
+    const renderDestinations = ({ item }) => {
+        return (
+
+            <TouchableOpacity style={styles.destinationContainer}>
+
+                <Text style={styles.destinationText}>
+
+                    {JSON.stringify(item.todo)}
+
+                </Text>
+                
+            </TouchableOpacity>
+        )
+    }
 
 
     const updateToFirestore = () => {
@@ -24,6 +66,9 @@ export default function NewVacationScreen({ route, navigation }) {
                 navigation.navigate("Home"))
         }
     }
+
+
+
     const deleteFromFirestore = () => {
         deleteFromDb(paramKey).then(
             Keyboard.dismiss(),
@@ -35,15 +80,26 @@ export default function NewVacationScreen({ route, navigation }) {
 
         <View style={styles.container}>
 
+            { list && (
+                <View style={styles.listContainer}>
+                    <FlatList
+                        data={list}
+                        renderItem={renderDestinations}
+                        keyExtractor={(item) => item.id}
+                        removeClippedSubviews={true}
+                    />
+                </View>
+            )}
 
-            <Text style={styles.titleText}>
+
+            {/* <Text style={styles.titleText}>
 
                 {"Destination: " + paramText}
 
-            </Text>
+            </Text> */}
 
 
-            <TextInput
+            {/* <TextInput
                 placeholder='Add what to do on Vacation here'
                 value={vacationTodoText}
                 onChangeText={(text) => setVacationTodoText(text)}
@@ -53,13 +109,23 @@ export default function NewVacationScreen({ route, navigation }) {
                 scrollEnabled={true}
                 returnKeyType='done'
                 blurOnSubmit={true}
-            />
+            /> */}
 
             <FAB
                 style={styles.fab}
                 small
                 icon='check'
-                onPress={updateToFirestore}
+                onPress={() => console.log(JSON.stringify(list))
+
+            }
+
+        />
+            <FAB
+                style={styles.fabCenter}
+                small
+                icon='check'
+                onPress={() => userDet()
+                }
 
             />
             <FAB
@@ -92,6 +158,7 @@ export default function NewVacationScreen({ route, navigation }) {
 
 }
 
+
 const styles = StyleSheet.create({
 
     container: {
@@ -115,6 +182,16 @@ const styles = StyleSheet.create({
         right: 0,
         bottom: 0
     },
+    fabCenter: {
+        position: 'absolute',
+        margin: 20,
+        right: 100,
+        bottom: 0
+    },
+    destinationText: {
+        fontSize: 20,
+        color: '#333333'
+    },
     fabCancel: {
         position: 'absolute',
         backgroundColor: 'red',
@@ -130,6 +207,10 @@ const styles = StyleSheet.create({
         marginTop: 100,
         height: 300,
         fontSize: 16
+    },
+    listContainer: {
+        marginTop: 20,
+        padding: 20,
     },
 
 
