@@ -5,12 +5,11 @@ import { FireBaseContext } from '../context/FireBaseContext';
 
 export default function NewVacationScreen({ navigation }) {
   const [destinationText, setDestinationText] = useState('');
-  const [vacationTodoText, setVacationTodoText] = useState('');
 
   const { saveToDb } = useContext(FireBaseContext);
 
   const writeToFirestore = () => {
-    saveToDb(destinationText, vacationTodoText).then(
+    saveToDb(destinationText).then(
       Keyboard.dismiss(),
       navigation.navigate('Home')
     );
@@ -25,19 +24,6 @@ export default function NewVacationScreen({ navigation }) {
         onChangeText={setDestinationText}
         style={styles.title}
       />
-
-      <TextInput
-        placeholder="Add what to do on Vacation here"
-        value={vacationTodoText}
-        onChangeText={setVacationTodoText}
-        mode="flat"
-        multiline={true}
-        style={styles.text}
-        scrollEnabled={true}
-        returnKeyType="done"
-        blurOnSubmit={true}
-      />
-
       <FAB style={styles.fab} small icon="check" onPress={writeToFirestore} />
     </View>
   );

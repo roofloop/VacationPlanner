@@ -11,6 +11,7 @@ import { auth, dbh } from '../firebase';
 import { FAB } from 'react-native-paper';
 import logo from '../assets/logo.png';
 
+
 export default function Home({ navigation }) {
   const [destination, setDestination] = useState([]);
   const userID = auth.currentUser.uid;

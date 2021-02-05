@@ -7,24 +7,42 @@ export const FireBaseContext = createContext();
 export const FireBaseContextProvider = ({ children }) => {
   const userID = auth.currentUser.uid;
 
-  const saveToDb = async (destinationText, vacationTodoText) => {
+  const saveToDb = async (destinationText) => {
     try {
-      if (
-        destinationText &&
-        destinationText.length &&
-        vacationTodoText &&
-        vacationTodoText.length > 0
-      ) {
+      if (destinationText && destinationText.length > 0) {
         const timestamp = firebase.firestore.FieldValue.serverTimestamp();
         const data = {
           destination: destinationText,
-          todo: vacationTodoText,
           creatorId: userID,
           createdAt: timestamp,
         };
         await dbh
           .add(data)
           .then((_doc) => {})
+          .catch((error) => {
+            alert(error);
+          });
+      } else {
+        // eslint-disable-next-line no-alert
+        alert('Textfields must not be empty!');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const todoSaveDb = async (vacationTodoText, paramKey) => {
+    try {
+      if (vacationTodoText && vacationTodoText.length > 0) {
+        const timestamp = firebase.firestore.FieldValue.serverTimestamp();
+        const data = {
+          todo: vacationTodoText,
+          creatorId: userID,
+          createdAt: timestamp,
+        };
+        await dbh
+          .doc(paramKey)
+          .collection('todos')
+          .add(data)
           .catch((error) => {
             alert(error);
           });
@@ -61,7 +79,9 @@ export const FireBaseContextProvider = ({ children }) => {
   };
 
   return (
-    <FireBaseContext.Provider value={{ saveToDb, updateToDb, deleteFromDb }}>
+    <FireBaseContext.Provider
+      value={{ saveToDb, updateToDb, deleteFromDb, todoSaveDb }}
+    >
       {children}
     </FireBaseContext.Provider>
   );
