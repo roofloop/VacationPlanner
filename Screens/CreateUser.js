@@ -3,6 +3,7 @@ import React, { useContext, useState } from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import { AuthContext } from '../context/AuthContext';
+import { colors } from 'material-ui/styles';
 
 export default function CreateUser() {
   const [email, setEmail] = useState('');
@@ -17,22 +18,19 @@ export default function CreateUser() {
   return (
     <View style={styles.container}>
       <Text style={styles.headText}>Create a new user</Text>
-
-      <View style={styles.inputView}>
+      <View style={styles.form}>
         <TextInput
-          style={styles.textInput}
+          style={styles.TextInputEmail}
           placeholder="Enter Email"
           keyboardType="email-address"
-          placeholderTextColor="#FFFFFF"
+          placeholderTextColor="black"
           value={email}
           onChangeText={setEmail}
         />
-      </View>
-      <View style={styles.inputView}>
         <TextInput
-          style={styles.textInput}
+          style={styles.TextInputPassword}
           placeholder="Enter Password"
-          placeholderTextColor="#FFFFFF"
+          placeholderTextColor="black"
           secureTextEntry={true}
           value={password}
           onChangeText={setPassword}
@@ -59,12 +57,22 @@ const styles = StyleSheet.create({
   inputView: {
     padding: 10,
   },
-  textInput: {
-    backgroundColor: '#465881',
-
-    borderRadius: 10,
-    padding: 10,
-    width: 200,
+  form: {
+    flex: 1,
+    justifyContent: 'center',
+    width: '80%',
+  },
+  TextInputPassword: {
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderColor: colors.SILVER,
+    height: 40,
+    marginBottom: 20,
+  },
+  TextInputEmail: {
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderColor: colors.SILVER,
+    height: 40,
+    marginBottom: 20,
   },
   headText: {
     fontSize: 36,
