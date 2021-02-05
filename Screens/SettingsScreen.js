@@ -3,9 +3,10 @@ import { Button, View, StyleSheet } from 'react-native';
 import { AuthContext } from '../context/AuthContext';
 import { StatusBar } from 'expo-status-bar';
 
-export default function SettingsScreen() {
+export default function SettingsScreen({ navigation }) {
   const { signOut } = useContext(AuthContext);
   const submit = () => {
+    navigation.goBack();
     signOut();
   };
 
@@ -20,7 +21,9 @@ export default function SettingsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#fff',
     alignItems: 'center',
+    justifyContent: 'center',
   },
   button: {
     flex: 1,

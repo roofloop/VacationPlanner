@@ -4,10 +4,12 @@ import {
   Text,
   FlatList,
   TouchableOpacity,
+  Image,
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { auth, dbh } from '../firebase';
 import { FAB } from 'react-native-paper';
+import logo from '../assets/logo.png';
 
 export default function Home({ navigation }) {
   const [destination, setDestination] = useState([]);
@@ -32,7 +34,7 @@ export default function Home({ navigation }) {
           console.log(error);
         }
       );
-  }, []);
+  }, [userID]);
 
   const renderDestinations = ({ item }) => {
     return (
@@ -53,6 +55,19 @@ export default function Home({ navigation }) {
 
   return (
     <View style={styles.container}>
+      <Image source={logo} style={styles.logo} />
+      <View style={styles.list}>
+        {destination && (
+          <View style={styles.listContainer}>
+            <FlatList
+              data={destination}
+              renderItem={renderDestinations}
+              keyExtractor={(item) => item.id}
+              removeClippedSubviews={true}
+            />
+          </View>
+        )}
+      </View>
       <FAB
         style={styles.fab}
         small
@@ -61,17 +76,6 @@ export default function Home({ navigation }) {
           navigation.navigate('NewVacationScreen');
         }}
       />
-
-      {destination && (
-        <View style={styles.listContainer}>
-          <FlatList
-            data={destination}
-            renderItem={renderDestinations}
-            keyExtractor={(item) => item.id}
-            removeClippedSubviews={true}
-          />
-        </View>
-      )}
     </View>
   );
 }
@@ -79,8 +83,20 @@ export default function Home({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    backgroundColor: '#fff',
     alignItems: 'center',
+    justifyContent: 'center',
+  },
+  logo: {
+    flex: 1,
+    width: '100%',
+    resizeMode: 'contain',
+    alignSelf: 'center',
+  },
+  list: {
+    flex: 1,
+    justifyContent: 'center',
+    width: '80%',
   },
 
   listContainer: {
@@ -96,9 +112,6 @@ const styles = StyleSheet.create({
   destinationText: {
     fontSize: 20,
     color: '#333333',
-  },
-  baseText: {
-    fontFamily: 'Cochin',
   },
   fab: {
     position: 'absolute',
