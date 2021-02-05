@@ -4,10 +4,13 @@ import firebase from 'firebase';
 
 export const FireBaseContext = createContext();
 
+//Context for handling CRUD-functionality.
+
 export const FireBaseContextProvider = ({ children }) => {
   const userID = auth.currentUser.uid;
 
-  const saveToDb = async (destinationText) => {
+  //Save destination to firestore and add metadata to be used for sorting
+  const saveDestinationToDb = async (destinationText) => {
     try {
       if (destinationText && destinationText.length > 0) {
         const timestamp = firebase.firestore.FieldValue.serverTimestamp();
@@ -18,7 +21,7 @@ export const FireBaseContextProvider = ({ children }) => {
         };
         await dbh
           .add(data)
-          .then((_doc) => {})
+          .then((_doc) => { })
           .catch((error) => {
             alert(error);
           });
@@ -30,6 +33,8 @@ export const FireBaseContextProvider = ({ children }) => {
       console.log(error);
     }
   };
+
+  //Save destination to firestore and add metadata used for sorting
   const todoSaveDb = async (vacationTodoText, paramKey) => {
     try {
       if (vacationTodoText && vacationTodoText.length > 0) {
@@ -44,6 +49,7 @@ export const FireBaseContextProvider = ({ children }) => {
           .collection('todos')
           .add(data)
           .catch((error) => {
+            // eslint-disable-next-line no-alert
             alert(error);
           });
       } else {
@@ -55,32 +61,21 @@ export const FireBaseContextProvider = ({ children }) => {
     }
   };
 
-  const updateToDb = async (vacationTodoText, paramText, paramKey) => {
-    if (vacationTodoText && vacationTodoText.length > 0) {
-      const timestamp = firebase.firestore.FieldValue.serverTimestamp();
-      const data = {
-        destination: paramText,
-        todo: vacationTodoText,
-        creatorId: userID,
-        createdAt: timestamp,
-      };
-      dbh
-        .doc(paramKey)
-        .set(data)
-        .catch((error) => {
-          // eslint-disable-next-line no-alert
-          alert(error);
-        });
-    }
+  const deleteTodoFromDb = async (paramKey, todoKey) => {
+    await dbh.doc(paramKey).collection('todos').doc(todoKey).delete();
   };
-
-  const deleteFromDb = async (paramKey) => {
-    await dbh.doc(paramKey).delete();
+  const deleteVacation = async (key) => {
+    await dbh.doc(key).delete();
   };
 
   return (
     <FireBaseContext.Provider
-      value={{ saveToDb, updateToDb, deleteFromDb, todoSaveDb }}
+      value={{
+        saveDestinationToDb,
+        deleteTodoFromDb,
+        todoSaveDb,
+        deleteVacation,
+      }}
     >
       {children}
     </FireBaseContext.Provider>

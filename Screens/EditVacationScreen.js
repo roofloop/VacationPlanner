@@ -1,41 +1,34 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { View, Text, StyleSheet, Alert, Modal } from 'react-native';
-import { FlatList, TextInput, TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
+import {
+  FlatList,
+  TextInput,
+  TouchableOpacity,
+} from 'react-native-gesture-handler';
 import { auth, dbh } from '../firebase';
 import { FAB } from 'react-native-paper';
 import { FireBaseContext } from '../context/FireBaseContext';
 import { stylesModal } from '../Styles/stylesModal';
 
-export default function NewVacationScreen({ route, navigation }) {
+export default function NewVacationScreen({ route }) {
   const paramKey = route.params.paramKey;
   const paramText = route.params.paramText;
-  const paramTodo = route.params.paramTodo;
+  const userID = auth.currentUser.uid;
 
   const [vacationTodoText, setVacationTodoText] = useState();
   const [todo, setTodo] = useState([]);
 
-
-  const { updateToDb, deleteFromDb, todoSaveDb } = useContext(FireBaseContext);
-
   const [ModalVisible, setModalVisible] = useState(false);
 
-  /* const updateToFirestore = () => {
-    updateToDb(vacationTodoText, paramText, paramKey).then(
-      Keyboard.dismiss(),
-      navigation.navigate('Home')
-    );
+  const { deleteTodoFromDb, todoSaveDb } = useContext(FireBaseContext);
+
+  const addTodoToFirestore = () => {
+    todoSaveDb(vacationTodoText, paramKey);
+    setVacationTodoText('');
+    setModalVisible(false);
   };
-  const deleteFromFirestore = () => {
-    deleteFromDb(paramKey).then(
-      Keyboard.dismiss(),
-      navigation.navigate('Home')
-    );
-  }; */
 
-
-  const userID = auth.currentUser.uid;
-
-  //Get data from firestore.
+  //Get data from firestore, order by descending, push data to array.
   useEffect(() => {
     dbh
       .doc(paramKey)
@@ -56,36 +49,39 @@ export default function NewVacationScreen({ route, navigation }) {
           console.log(error);
         }
       );
-  }, []);
+  }, [paramKey, userID]);
 
   const renderTodos = ({ item }) => {
     return (
-      <TouchableOpacity style={styles.destinationContainer}>
+      <TouchableOpacity
+        onLongPress={() => {
+          Alert.alert(
+            'Delete todo',
+            'Are you sure you want to delete this todo?',
+            [
+              {
+                text: 'Cancel',
+                onPress: () => console.log('Cancel Pressed'),
+                style: 'cancel',
+              },
+              {
+                text: 'OK',
+                onPress: () => deleteTodoFromDb(paramKey, item.id),
+              },
+            ],
+            { cancelable: false }
+          );
+        }}
+        style={styles.destinationContainer}
+      >
         <Text style={styles.titleText}>{item.todo}</Text>
       </TouchableOpacity>
     );
   };
 
-  const addTodoToFirestore = () => {
-    todoSaveDb(vacationTodoText, paramKey);
-    setModalVisible(false);
-  };
-
   return (
     <View style={styles.container}>
       <Text style={styles.titleText}>{'Destination: ' + paramText}</Text>
-
-      {/* <TextInput
-        placeholder="Add what to do on Vacation here"
-        value={vacationTodoText}
-        onChangeText={(text) => setVacationTodoText(text)}
-        mode="flat"
-        multiline={true}
-        style={styles.text}
-        scrollEnabled={true}
-        returnKeyType="done"
-        blurOnSubmit={true}
-      /> */}
 
       <FAB
         style={styles.fab}
@@ -93,28 +89,6 @@ export default function NewVacationScreen({ route, navigation }) {
         icon="plus"
         onPress={() => setModalVisible(true)}
       />
-
-      {/* <FAB
-        style={styles.fabCancel}
-        small
-        icon="close"
-        onPress={() => {
-          Alert.alert(
-            'Deleting vacation input',
-            'Are you sure you want to delete this vacation from your planner?',
-            [
-              {
-                text: 'Cancel',
-                onPress: () => console.log('Cancel Pressed'),
-                style: 'cancel',
-              },
-              { text: 'Delete', onPress: deleteFromFirestore },
-            ],
-            { cancelable: false }
-          );
-          //navigation.navigate("NewVacationScreen")
-        }}
-      /> */}
 
       <View style={styles.list}>
         {todo && (

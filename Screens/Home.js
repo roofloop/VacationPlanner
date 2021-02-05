@@ -5,16 +5,18 @@ import {
   FlatList,
   TouchableOpacity,
   Image,
+  Alert,
 } from 'react-native';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { auth, dbh } from '../firebase';
 import { FAB } from 'react-native-paper';
 import logo from '../assets/logo.png';
-
+import { FireBaseContext } from '../context/FireBaseContext';
 
 export default function Home({ navigation }) {
   const [destination, setDestination] = useState([]);
   const userID = auth.currentUser.uid;
+  const { deleteVacation } = useContext(FireBaseContext);
 
   //Get data from firestore.
   useEffect(() => {
@@ -37,6 +39,7 @@ export default function Home({ navigation }) {
       );
   }, [userID]);
 
+  //Render all the items and handle onPress
   const renderDestinations = ({ item }) => {
     return (
       <TouchableOpacity
@@ -47,6 +50,23 @@ export default function Home({ navigation }) {
             paramTodo: item.todo,
           })
         }
+        onLongPress={() => {
+          Alert.alert(
+            'Delete todo',
+            'Are you sure you want to delete this todo?',
+            [
+              {
+                text: 'Cancel',
+                style: 'cancel',
+              },
+              {
+                text: 'OK',
+                onPress: () => deleteVacation(item.id),
+              },
+            ],
+            { cancelable: false }
+          );
+        }}
         style={styles.destinationContainer}
       >
         <Text style={styles.destinationText}>{item.destination}</Text>

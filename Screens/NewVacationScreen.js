@@ -6,10 +6,10 @@ import { FireBaseContext } from '../context/FireBaseContext';
 export default function NewVacationScreen({ navigation }) {
   const [destinationText, setDestinationText] = useState('');
 
-  const { saveToDb } = useContext(FireBaseContext);
+  const { saveDestinationToDb } = useContext(FireBaseContext);
 
   const writeToFirestore = () => {
-    saveToDb(destinationText).then(
+    saveDestinationToDb(destinationText).then(
       Keyboard.dismiss(),
       navigation.navigate('Home')
     );

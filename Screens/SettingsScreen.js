@@ -5,6 +5,8 @@ import { StatusBar } from 'expo-status-bar';
 
 export default function SettingsScreen({ navigation }) {
   const { signOut } = useContext(AuthContext);
+
+  //Signout function
   const submit = () => {
     navigation.goBack();
     signOut();

@@ -31,7 +31,8 @@ export default function AuthContextProvider({ children }) {
     try {
       await auth.signOut();
     } catch (error) {
-      console.log('error:', error);
+      // eslint-disable-next-line no-alert
+      alert(error);
     }
   };
 
@@ -39,7 +40,8 @@ export default function AuthContextProvider({ children }) {
     try {
       await auth.createUserWithEmailAndPassword(email, password);
     } catch (error) {
-      console.log('error: ', error);
+      // eslint-disable-next-line no-alert
+      alert(error);
     }
   };
 
