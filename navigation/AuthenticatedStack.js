@@ -1,16 +1,18 @@
 import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
-import Home from '../Screens/Home';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import SettingsScreen from '../Screens/SettingsScreen';
+import HomeStack from './HomeStack';
+import { FireBaseContextProvider } from '../context/FireBaseContext';
 
-
-
-const Stack = createStackNavigator();
+const Drawer = createDrawerNavigator();
 
 export default function AuthenticatedStack() {
   return (
-      <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen name="Home" component={Home} />
-      </Stack.Navigator>
+    <FireBaseContextProvider>
+      <Drawer.Navigator initialRouteName="Home">
+        <Drawer.Screen name="Home" component={HomeStack} />
+        <Drawer.Screen name="Settings" component={SettingsScreen} />
+      </Drawer.Navigator>
+    </FireBaseContextProvider>
   );
 }
-

@@ -1,75 +1,143 @@
-import React, { useContext } from 'react';
-import { Button, View, StyleSheet, Text } from 'react-native';
-import { AuthContext } from '../context/AuthContext';
-import { StatusBar } from 'expo-status-bar';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { NavigationContainer } from '@react-navigation/native';
+import {
+  View,
+  StyleSheet,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  Image,
+  Alert,
+} from 'react-native';
+import React, { useState, useEffect, useContext } from 'react';
+import { auth, dbh } from '../firebase';
+import { FAB } from 'react-native-paper';
+import logo from '../assets/logo.png';
+import { FireBaseContext } from '../context/FireBaseContext';
 
+export default function Home({ navigation }) {
+  const [destination, setDestination] = useState([]);
+  const userID = auth.currentUser.uid;
+  const { deleteVacation } = useContext(FireBaseContext);
 
+  //Get data from firestore.
+  useEffect(() => {
+    dbh
+      .where('creatorId', '==', userID)
+      .orderBy('createdAt', 'desc')
+      .onSnapshot(
+        (querySnapshot) => {
+          const newDestination = [];
+          querySnapshot.forEach((doc) => {
+            const destinations = doc.data();
+            destinations.id = doc.id;
+            newDestination.push(destinations);
+          });
+          setDestination(newDestination);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+  }, [userID]);
 
-
-export default function Home() {
-
-  const { signOut } = useContext(AuthContext);
-
-
-  const submit = () => {
-    signOut();
-
+  //Render all the items and handle onPress
+  const renderDestinations = ({ item }) => {
+    return (
+      <TouchableOpacity
+        onPress={() =>
+          navigation.navigate('EditVacationScreen', {
+            paramKey: item.id,
+            paramText: item.destination,
+            paramTodo: item.todo,
+          })
+        }
+        onLongPress={() => {
+          Alert.alert(
+            'Delete todo',
+            'Are you sure you want to delete this todo?',
+            [
+              {
+                text: 'Cancel',
+                style: 'cancel',
+              },
+              {
+                text: 'OK',
+                onPress: () => deleteVacation(item.id),
+              },
+            ],
+            { cancelable: false }
+          );
+        }}
+        style={styles.destinationContainer}
+      >
+        <Text style={styles.destinationText}>{item.destination}</Text>
+      </TouchableOpacity>
+    );
   };
 
-
-  function HomeScreen() {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>Home!</Text>
-      </View>
-    );
-  }
-  
-  function SettingsScreen() {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>Settings!</Text>
-      </View>
-    );
-  }
-
-  const Tab = createBottomTabNavigator();
-
-
   return (
-
-
     <View style={styles.container}>
-      <StatusBar style="auto" />
-      <Button style={styles.button} title="Sign Out" onPress={submit} />
-
-
-      <Tab.Navigator>
-        <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="Settings" component={SettingsScreen} />
-      </Tab.Navigator>
-
+      <Image source={logo} style={styles.logo} />
+      <View style={styles.list}>
+        {destination && (
+          <View style={styles.listContainer}>
+            <FlatList
+              data={destination}
+              renderItem={renderDestinations}
+              keyExtractor={(item) => item.id}
+              removeClippedSubviews={true}
+            />
+          </View>
+        )}
+      </View>
+      <FAB
+        style={styles.fab}
+        small
+        icon="plus"
+        onPress={() => {
+          navigation.navigate('NewVacationScreen');
+        }}
+      />
     </View>
-
-    
-
-
   );
 }
-
-
-
-
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center'
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  button: {
+  logo: {
     flex: 1,
-    marginTop: 100,
-  }
+    width: '100%',
+    resizeMode: 'contain',
+    alignSelf: 'center',
+  },
+  list: {
+    flex: 1,
+    justifyContent: 'center',
+    width: '80%',
+  },
+
+  listContainer: {
+    marginTop: 20,
+    padding: 20,
+  },
+  destinationContainer: {
+    marginTop: 16,
+    borderBottomColor: '#cccccc',
+    borderBottomWidth: 1,
+    paddingBottom: 16,
+  },
+  destinationText: {
+    fontSize: 20,
+    color: '#333333',
+  },
+  fab: {
+    position: 'absolute',
+    margin: 20,
+    right: 0,
+    bottom: 0,
+  },
 });

@@ -1,5 +1,5 @@
-import React, { createContext, useState, useEffect } from "react";
-import { auth } from "../firebase";
+import React, { createContext, useState, useEffect } from 'react';
+import { auth } from '../firebase';
 
 export const AuthContext = createContext();
 
@@ -9,7 +9,6 @@ export default function AuthContextProvider({ children }) {
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
-      console.log('user: ', user);
       setUser(user);
       setIsloading(false);
     });
@@ -17,34 +16,34 @@ export default function AuthContextProvider({ children }) {
     return unsubscribe;
   });
 
-
   const logIn = async (email, password) => {
-    console.log("calling log in");
+    console.log('calling log in');
     try {
       await auth.signInWithEmailAndPassword(email, password);
-      console.log("logIn");
     } catch (error) {
+      // eslint-disable-next-line no-alert
+      alert(error);
       console.log('error', error);
     }
   };
 
   const signOut = async () => {
-
     try {
       await auth.signOut();
     } catch (error) {
-      console.log('error:', error);
+      // eslint-disable-next-line no-alert
+      alert(error);
     }
-  }
+  };
 
   const signUp = async (email, password) => {
     try {
-      await auth.createUserWithEmailAndPassword(email, password)
-      console.log("Creating User")
+      await auth.createUserWithEmailAndPassword(email, password);
     } catch (error) {
-      console.log("error: ", error)
+      // eslint-disable-next-line no-alert
+      alert(error);
     }
-  }
+  };
 
   return (
     <AuthContext.Provider value={{ logIn, signOut, user, isLoading, signUp }}>

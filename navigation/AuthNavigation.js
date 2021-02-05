@@ -5,21 +5,16 @@ import UnauthenticatedStack from './UnauthenticatedStack';
 import { AuthContext } from '../context/AuthContext';
 import Splash from '../Screens/Splash';
 
-
-
-
 export default function AuthNavigation() {
-
   const { user, isLoading } = useContext(AuthContext);
-  
-  if(isLoading){
 
-    return <Splash />
+  if (isLoading) {
+    return <Splash />;
   }
 
   return (
     <NavigationContainer>
-      {user ? <AuthenticatedStack/> : <UnauthenticatedStack/>}
+      {user ? <AuthenticatedStack /> : <UnauthenticatedStack />}
     </NavigationContainer>
   );
 }
