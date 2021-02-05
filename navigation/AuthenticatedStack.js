@@ -1,30 +1,18 @@
 import React from 'react';
-import Home from '../Screens/Home';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import SettingsScreen from '../Screens/SettingsScreen';
-import NewVacationScreen from '../Screens/NewVacationScreen';
-import EditVacationScreen from '../Screens/EditVacationScreen';
-import { createStackNavigator } from '@react-navigation/stack';
+import HomeStack from './HomeStack';
 import { FireBaseContextProvider } from '../context/FireBaseContext';
 
-const Stack = createStackNavigator();
+const Drawer = createDrawerNavigator();
 
 export default function AuthenticatedStack() {
   return (
     <FireBaseContextProvider>
-      <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="SettingsScreen" component={SettingsScreen} />
-        <Stack.Screen
-          name="NewVacationScreen"
-          component={NewVacationScreen}
-          options={{ title: 'New vacation' }}
-        />
-        <Stack.Screen
-          name="EditVacationScreen"
-          component={EditVacationScreen}
-          options={{ title: 'Edit or delete vacation' }}
-        />
-      </Stack.Navigator>
+      <Drawer.Navigator initialRouteName="Home">
+        <Drawer.Screen name="Home" component={HomeStack} />
+        <Drawer.Screen name="Settings" component={SettingsScreen} />
+      </Drawer.Navigator>
     </FireBaseContextProvider>
   );
 }
